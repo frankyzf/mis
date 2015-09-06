@@ -1,0 +1,60 @@
+<!doctype html>
+<html ng-app="volumeApp">
+	<head>
+		<script src="/static/bower_components/angular/angular.min.js"></script>
+		<script src="/static/bower_components/angular-resource/angular-resource.js"></script>
+        <script src="/static/bower_components/ng-table/dist/ng-table.min.js"></script>
+		<script src="/static/js/volume.js"></script>
+		<link rel="stylesheet" href="/static/css/volume.css" />
+        <link rel="stylesheet" href="/static/bower_components/ng-table/dist/ng-table.css" />
+	</head>
+	<body >
+		<h2> Server Volume Report </h2>
+		<h3>Please select the servers</h3>
+		<div ng-controller="servctrl">
+            <form ng-submit="fetchVolume()">
+                <span>total server number: {{servers.length}} </span>
+                <ul class="unstyled">
+                    <li ng-repeat="server in servers">
+                        <input type="checkbox" ng-model="checked[server.name]">
+                        <span> {{server.name}} </span>
+                    </li>
+                </ul>
+                <input id="fetchdate" type="month" name="fetchdate" ng-model="fetchdate"
+                       placeholder="yyyy-mm" max="lastmonth" required />
+                <pre> select, {{fetchdate}}</pre>
+                <input type="submit" id="submit" value="submit" />
+            </form>
+
+             <table ng-table="tableParams" class="table ng-table-responsive">
+                <tbody ng-repeat="group in $groups">
+                <tr class="ng-table-group">
+                    <td colspan="{{$columns.length}}">
+                        <a href="" ng-click="group.$hideRows = !group.$hideRows">
+                            <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
+                            <strong>{{ group.value }}</strong>
+                        </a>
+                    </td>
+                </tr>
+                <tr ng-hide="group.$hideRows" ng-repeat="trade in group.data">
+                    <td sortable="'server'" data-title="'Server'">{{trade.server}}</td>
+                    <td sortable="'date'" data-title="'Date'">{{trade.date}}</td>
+                    <td sortable="'time'" data-title="'Time'">{{trade.time}}</td>
+                    <td sortable="'side'" data-title="'Side'">{{trade.side}} </td>
+                    <td sortable="'symbol'" data-title="'Symbol'">{{trade.symbol}}</td>
+                    <td sortable="'side'" data-title="'Side'">{{trade.side}}</td>
+                    <td sortable="'bank'" data-title="'Bank'">{{trade.bank}}</td>
+                    <td sortable="'size'" data-title="'Size'">{{trade.size}}</td>
+                    <td sortable="'price'" data-title="'Price'">{{trade.price}}</td>
+                    <td sortable="'termsize'" data-title="'TermSize'">{{trade.termsize}}</td>
+                </tr>
+                <tr>
+                    <td class="text-success text-right"><strong>Summary:</strong></td>
+                    <td>{{calcSum(group.data)}}</td>
+                </tr>
+                </tbody>
+            </table>
+		</div>
+		
+	</body>
+</html>
